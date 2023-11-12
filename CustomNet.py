@@ -1,10 +1,6 @@
 import torch.nn as nn
 import torchvision.models as models
 
-from libkaraaba import cv_utils
-
-
-
 class CustomNet(nn.Module):
     def __init__(self, num_classes, in_features_size=256, adaptive_pool_output=(1, 1), pretrained=True):  # resnet18
     # def __init__(self, num_classes, in_features_size=1024, adaptive_pool_output=(1, 1), pretrained=True): #resnet50
@@ -22,6 +18,7 @@ class CustomNet(nn.Module):
         try:
             x = self.custom_model(x)
             x = self.adaptiveAvgPool2d(x)
+
             x = x.view(x.size(0), -1)
             x = self.fc(x)
         except Exception as E:
