@@ -79,8 +79,7 @@ def predict_image(filepath, model, labels=("acura", "alpha romeo"), res=(128,128
 
 import sys
 if __name__ == '__main__':
-    commands = [('single','main_single_image'),
-                ('dir','main_1 directory')]
+    commands = ['single','dir']
 
     if len(sys.argv)==1:
        print ('options are',commands)
@@ -89,11 +88,11 @@ if __name__ == '__main__':
     inputCommand = sys.argv[1]
     commandArgs = sys.argv[1:]
 
-    if sys.argv[1]==commands[0][0]:
-        sys.argv = commandArgs
-        main_single()
-    elif sys.argv[1]==commands[1][0]:
-        sys.argv = commandArgs
-        main_dir()
-    else:
-       print ('unknown keyword:',sys.argv[1])
+    print(inputCommand, commandArgs)
+
+    if sys.argv[1] == commands[0]:
+       sys.argv = commandArgs
+       main_single()
+    elif sys.argv[1]==commands[1]:
+       sys.argv = commandArgs
+       main_dir()
