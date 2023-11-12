@@ -1,12 +1,28 @@
 import torch
 from torch import nn, optim
 import copy
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from libkaraaba import time_utils
-import shutil
+# import shutil
 
 import evaluator
+
+def svm_loss(output, target):
+    margin = 1  # Margin for the SVM loss
+    num_classes = output.size(1)
+
+    # Construct matrix of correct scores
+    correct_scores = output[torch.arange(output.size(0)), target].view(-1, 1)
+
+    # Calculate SVM loss
+    loss = torch.sum(torch.clamp(output - correct_scores + margin, min=0))
+    loss -= margin  # Subtract the margin for the correct class
+
+    # Average the loss
+    loss /= output.size(0)
+
+    return loss
 
 class trainer:
     def __init__(self, model, lrate=0.0075, batch_size=2, device="cpu"):
@@ -23,14 +39,16 @@ class trainer:
 
         # Initialize the optimizer
         self.optimizer = optim.SGD(model.parameters(), lr=lrate, momentum=momentum, weight_decay=weight_decay)
+        print("optimizer: stochastic gradient descent ")
 
         self.batch_size = batch_size
         self.loss_function = nn.CrossEntropyLoss()
 
         print('lrate:', lrate)
+        print('momentum:', momentum)
 
-        shutil.rmtree('logs')
-        self.writer = SummaryWriter('logs')  # 'logs' is the directory where TensorBoard will store the log files
+        # shutil.rmtree('logs')
+        # self.writer = SummaryWriter('logs')  # 'logs' is the directory where TensorBoard will store the log files
 
 
     def train(self, out_model_path, train_loader, validation_loader, test_loader, num_epochs=2):
@@ -64,13 +82,16 @@ class trainer:
             if epoch % 3 == 0 and epoch > 0:
                acc_train = evaluator.evaluate(self.model, train_loader, self.device, dataset_name='train', images_list=None)
                acc_val = evaluator.evaluate(self.model, validation_loader, self.device, dataset_name='validation', images_list=None)
-               self.writer.add_scalar('Train Acc', acc_train, global_step=epoch)
-               self.writer.add_scalar('Val Acc', acc_val, global_step=epoch)
+               
+               # self.writer.add_scalar('Train Acc', acc_train, global_step=epoch)
+               # self.writer.add_scalar('Val Acc', acc_val, global_step=epoch)
+               
                if best_acc < acc_val:
                   print('saving when val acc is ', round(acc_val))
 
                   if out_model_path is not None:
                      torch.save(self.model.state_dict(), out_model_path) # model is saved
+                      
                   self.best_model = copy.deepcopy(self.model)
 
                   print('model is saved...', end='')
