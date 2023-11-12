@@ -15,26 +15,13 @@ class CustomNet(nn.Module):
 
         self.adaptiveAvgPool2d = nn.AdaptiveAvgPool2d(output_size=adaptive_pool_output)
 
-        # print(self.custom_model)
-        # new_size = 512*2
-        #new_size = 512
         new_size = in_features_size * adaptive_pool_output[0] * adaptive_pool_output[1]
-        # print("new_size", new_size)
-        # self.resnet18[7][1].bn2 = nn.BatchNorm2d(new_size)
-        # # self.resnet18[7][1].conv2 = nn.Conv2d(256+256, 256+256+5, kernel_size=(3,3))
-        # self.resnet18[7][1].conv2 = nn.Conv2d(256+256, new_size, kernel_size=(3,3), stride = (1, 1), padding = (1, 1), bias = False)
-        #, stride = (1, 1), padding = (1, 1), bias = False
-
         self.fc = nn.Linear(new_size, num_classes)
-
-        # print(self.custom_model)
-        #self.resnet18 = models.resnet18()
 
     def forward(self, x):
         try:
             x = self.custom_model(x)
             x = self.adaptiveAvgPool2d(x)
-
             x = x.view(x.size(0), -1)
             x = self.fc(x)
         except Exception as E:
