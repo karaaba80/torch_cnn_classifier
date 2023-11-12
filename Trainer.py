@@ -1,10 +1,10 @@
 import torch
 from torch import nn, optim
 import copy
-# from torch.utils.tensorboard import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
-from libkaraaba import time_utils
-# import shutil
+import time_utils
+import shutil
 
 import evaluator
 
@@ -47,8 +47,8 @@ class trainer:
         print('lrate:', lrate)
         print('momentum:', momentum)
 
-        # shutil.rmtree('logs')
-        # self.writer = SummaryWriter('logs')  # 'logs' is the directory where TensorBoard will store the log files
+        shutil.rmtree('logs')
+        self.writer = SummaryWriter('logs')  # 'logs' is the directory where TensorBoard will store the log files
 
 
     def train(self, out_model_path, train_loader, validation_loader, test_loader, num_epochs=2):
@@ -83,8 +83,8 @@ class trainer:
                acc_train = evaluator.evaluate(self.model, train_loader, self.device, dataset_name='train', images_list=None)
                acc_val = evaluator.evaluate(self.model, validation_loader, self.device, dataset_name='validation', images_list=None)
                
-               # self.writer.add_scalar('Train Acc', acc_train, global_step=epoch)
-               # self.writer.add_scalar('Val Acc', acc_val, global_step=epoch)
+               self.writer.add_scalar('Train Acc', acc_train, global_step=epoch) #for tensorboard
+               self.writer.add_scalar('Val Acc', acc_val, global_step=epoch) #for tensorboard
                
                if best_acc < acc_val:
                   print('saving when val acc is ', round(acc_val))
