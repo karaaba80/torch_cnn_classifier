@@ -4,6 +4,7 @@ import copy
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 import time_utils
+import os
 import shutil
 
 import evaluator
@@ -47,7 +48,9 @@ class trainer:
         print('lrate:', lrate)
         print('momentum:', momentum)
 
-        shutil.rmtree('logs')
+        if os.path.exists("logs"):
+           shutil.rmtree('logs')
+
         self.writer = SummaryWriter('logs')  # 'logs' is the directory where TensorBoard will store the log files
 
 
