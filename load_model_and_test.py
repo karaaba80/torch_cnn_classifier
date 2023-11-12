@@ -43,9 +43,11 @@ def main_single():
     model.load_state_dict(torch.load(args.model_path))
     model.eval() #necessary to disable any drop out units and further
     torch.no_grad()
+    
     weight, height = list(map(int, args.res.split("x")))
     pred,label = predict_image(args.img, model, res=(weight, height))
-    print(pred,label)
+    
+    print("prediction", pred,"label",label)
     img = cv2.imread(args.img, 1)
 
     # val = np.mean(img[int(img.shape[1]*0.1):int(img.shape[1]*0.6),int(img.shape[0]*0.1):int(img.shape[0]*0.6)]) #for text color
