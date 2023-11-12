@@ -70,7 +70,6 @@ def evaluate(model, test_loader, device, dataset_name, images_list=None):
             correct += (predicted == labels).sum().item()
 
         else:
-
           for data,img_list in zip(test_loader,images_list):
              images, labels = data
              images, labels = images.to(device), labels.to(device)
