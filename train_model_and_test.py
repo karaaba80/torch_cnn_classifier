@@ -62,8 +62,10 @@ def main():
                     validation_loader=val_loader, test_loader=test_loader,
                     num_epochs=args.number_of_epochs)
 
+    #this is to test if we can use the model from disk instead of using the model in the memory.
     evaluator.evaluate_load_from_disk(mytrainer.saved_model_name, directory=args.test_dir, device=device, input_shape=(img_width, img_height),
                                       adaptive_pool_output=adaptive_pool_output)
+    
     evaluator.evaluate_load_from_disk(mytrainer.saved_model_name, directory=args.val_dir, device=device, input_shape=(img_width, img_height),
                                       adaptive_pool_output=adaptive_pool_output)
 
