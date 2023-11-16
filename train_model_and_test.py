@@ -20,8 +20,8 @@ def main():
 
     parser.add_argument('--out-model-path', dest="model_path", type=str, required=True)
 
-    parser.add_argument("--res", default="64x64",
-                        help="Target size for resizing in the format 'wxh' (default: 128x128).")
+    parser.add_argument("--res", default="128x128",
+                        help="Target size for resizing in the format 'wxh'.")
 
     parser.add_argument('--ep', dest="number_of_epochs", type=int, default="32")
     parser.add_argument('--lr', dest="learning_rate", type=float, default="0.004")
