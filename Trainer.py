@@ -72,10 +72,11 @@ class trainer:
                 self.optimizer.zero_grad()
                 output = self.model(data)
 
-                # Calculate SVM loss
+                # Calculate CrossEntropyLoss loss
                 loss = self.loss_function(output, target)
 
                 #loss = svm_loss(output, target) #we use SVM loss instead of CrossEntropyLoss
+                
                 avg_loss += loss.cpu().detach().numpy()
 
                 # Backward and optimize
