@@ -29,7 +29,7 @@ def main_dir():
 
     print(sum(values)/len(results))
 
-def main_single():
+def main_single_image():
     parser = argparse.ArgumentParser(description='Train ResNet-18 on custom dataset')
     parser.add_argument('--img', type=str, required=True, help='Path to the image file')
     parser.add_argument('--model-path', type=str, required=True, help='path of the model')
@@ -54,7 +54,7 @@ def main_single():
     # color = 255-int(val) #for text color
 
     # cv2.putText(img, text=label, org=(int(img.shape[1]*0.4),int(img.shape[0]*0.4)),
-    #             thickness=1, fontScale=0.5, fontFace=cv2.FONT_HERSHEY_SIMPLEX, color=(color,color,color))
+    #             thickness=1, fontScale=0.5, fontFace=cv2.FONT_HERSHEY_SIMPLEX, color=(color,color,color)) #only to show the picture with a text on it. 
     cv2.imshow("class "+label, img)
     cv2.waitKey(0)
 
@@ -66,6 +66,7 @@ def predict_image(filepath, model, labels=("acura", "alpha romeo"), res=(128,128
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(os.path.basename(filepath),end=" ")
     normalizer = torchvision.transforms.Normalize(mean=0.5, std=0.5)
+    
     image = Image.open(filepath)
     model.to(device=device)
     image = image.resize(res)
@@ -81,7 +82,7 @@ def predict_image(filepath, model, labels=("acura", "alpha romeo"), res=(128,128
 
 import sys
 if __name__ == '__main__':
-    commands = ['single','dir']
+    commands = ['single_image','image_dir']
 
     if len(sys.argv)==1:
        print ('options are',commands)
@@ -94,7 +95,7 @@ if __name__ == '__main__':
 
     if sys.argv[1] == commands[0]:
        sys.argv = commandArgs
-       main_single()
+       main_single_image()
     elif sys.argv[1]==commands[1]:
        sys.argv = commandArgs
        main_dir()
