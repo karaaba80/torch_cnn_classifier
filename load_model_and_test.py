@@ -10,7 +10,7 @@ from CustomNet import CustomNet
 def main_dir():
     parser = argparse.ArgumentParser(description='Train ResNet-18 on custom dataset')
     parser.add_argument('--test-dir', type=str, required=True, help='Path to the testing data directory')
-    parser.add_argument('--model-path', type=str, required=True, help='save model path')
+    parser.add_argument('--model-path', type=str, required=True, help='path of the model')
     parser.add_argument("--res", default="128x128", help="Target size for resizing in the format 'wxh' (default: 128x128).")
 
     args = parser.parse_args()
