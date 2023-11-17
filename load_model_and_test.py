@@ -25,7 +25,7 @@ def main_dir():
     results = [predict_image(f, mymodel, res=(weight,height)) for f in files]
     values = [r[0].cpu().detach().numpy()[0] for r in results]
 
-    print(sum(values)/len(results))
+    # print(sum(values)/len(results))
 
 def main_single_image():
     parser = argparse.ArgumentParser(description='Train ResNet-18 on custom dataset')
@@ -50,9 +50,9 @@ def main_single_image():
 
     # val = np.mean(img[int(img.shape[1]*0.1):int(img.shape[1]*0.6),int(img.shape[0]*0.1):int(img.shape[0]*0.6)]) #for text color
     # color = 255-int(val) #for text color
-
     # cv2.putText(img, text=label, org=(int(img.shape[1]*0.4),int(img.shape[0]*0.4)),
     #             thickness=1, fontScale=0.5, fontFace=cv2.FONT_HERSHEY_SIMPLEX, color=(color,color,color)) #only to show the picture with a text on it. 
+    
     cv2.imshow("class "+label, img)
     cv2.waitKey(0)
 
