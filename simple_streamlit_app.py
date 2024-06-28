@@ -1,3 +1,5 @@
+import os.path
+
 import streamlit as st
 from PIL import Image
 
@@ -24,6 +26,9 @@ def main():
     if uploaded_file is not None:
        image_org = Image.open(uploaded_file)
        image_placeholder.image(image_org, caption='Brand:',use_column_width=True)
+
+
+    st.write(os.path.exists("model_24Nov1940-Adam.txt"))
 
 class CustomNet(nn.Module):
     def __init__(self, num_classes, in_features_size=256, adaptive_pool_output=(1, 1), pretrained=True):  # resnet18
