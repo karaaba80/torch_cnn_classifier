@@ -169,11 +169,12 @@ def main():
     color_mode, flip_or_not = add_combos_in_a_row(text_for_combo1="choose color", options1=("RGB", "Grayscale"),
                                                   text_for_combo2="choose flip", options2=("Org", "Flip"))
 
-    if color_mode.lower() is "Grayscale".lower():
+    if color_mode.lower() == "Grayscale".lower():
        image_org = pil_grayscale(image_org)
        image_placeholder.image(image_org, caption='Brand:', use_column_width=True)
 
     st.write(color_mode)
+    st.write(color_mode.lower() is "Grayscale".lower())
 
     if image_org is not None:
        predicted_numpy, label, confidence_value = predict_image_object(image_org, model, labels=("acura", "alpha romeo"), res=(w,h), min_prob_threshold=0.75)
