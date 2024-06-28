@@ -173,6 +173,8 @@ def main():
        image_org = pil_grayscale(image_org)
        image_placeholder.image(image_org, caption='Brand:', use_column_width=True)
 
+    
+
     if image_org is not None:
        predicted_numpy, label, confidence_value = predict_image_object(image_org, model, labels=("acura", "alpha romeo"), res=(w,h), min_prob_threshold=0.75)
        st.write("Brand", label, "Confidence", confidence_value)
