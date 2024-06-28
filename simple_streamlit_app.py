@@ -9,6 +9,29 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 
+def read_model_properties(model_params_path):
+    model_params = open(model_params_path).readlines()
+    properties = {}
+    for parameter in model_params:
+        if parameter.startswith("classes"):
+            properties["classes"] = parameter.split(':')[1].strip().split(',')
+        elif parameter.startswith("number of classes"):
+            properties["number of classes"] = int(parameter.split(':')[1].strip())
+        elif parameter.startswith("adaptive pool output"):
+            properties["adaptive pool output"] = tuple(map(int, parameter.split(':')[1].strip().split(",")))
+        elif parameter.startswith("resolution"):
+            properties["resolution"] = parameter.split(':')[1].strip()
+
+    print(properties)
+
+    adp_pool = properties["adaptive pool output"]
+    num_classes = properties["number of classes"]
+    classes = properties["classes"]
+    resolution = list(map(int, properties["resolution"].split("x")))
+
+    return adp_pool,num_classes,classes,resolution
+
+
 class CustomNet(nn.Module):
     def __init__(self, num_classes, in_features_size=256, adaptive_pool_output=(1, 1), pretrained=True):  # resnet18
         super(CustomNet, self).__init__()
@@ -64,6 +87,10 @@ def main():
     st.write(os.path.exists("model_24Nov1940-Adam.txt"))
     st.write(numpy.__version__)
 
+    model_params_path = "model_24Nov1940-Adam.txt"
+    model_path = "model_24Nov1940-Adam.pth"
+
+    adp_pool, num_classes, classes, resolution = read_model_properties(model_params_path)
     model = CustomNet(num_classes=num_classes, adaptive_pool_output=adp_pool)
 
 
