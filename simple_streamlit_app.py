@@ -15,5 +15,6 @@ if 'switch' not in st.session_state:
 
 image_placeholder = st.empty()
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-image_org = Image.open(uploaded_file)
-image_placeholder.image(image_org, caption='Brand:',use_column_width=True)
+if uploaded_file is not None:
+   image_org = Image.open(uploaded_file)
+   image_placeholder.image(image_org, caption='Brand:',use_column_width=True)
