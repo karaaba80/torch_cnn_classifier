@@ -33,6 +33,23 @@ def add_combos_in_a_row(text_for_combo1='Select option for Combo Box 1',
 
     return option1,option2,option3
 
+
+def add_sliders_in_a_row(text_for_slide1='Select option for Combo Box 1',
+                         text_for_slide2='Select option for Combo Box 2'):
+
+    # Create two columns
+    col1, col2 = st.columns(2)
+
+    # Add a combo box to each column
+    with col1:
+        slide1 = st.slider(text_for_slide1, 1, 30, 1)
+
+    with col2:
+        slide2 = st.slider(text_for_slide2, 1, 30, 1)
+
+    return slide1, slide2
+
+
 def read_model_properties(model_params_path):
     model_params = open(model_params_path).readlines()
     properties = {}
@@ -147,17 +164,21 @@ def main():
     # Text
     # st.write("This is a  example.")
 
+    if 'script_run_once' not in st.session_state:
+        st.session_state.script_run_once = False
 
-    # print("percentage",percentage)
-    if 'switch' not in st.session_state:
-        st.session_state.switch = 0
+    st.write("session state:" + str(st.session_state))
+    # def on_option_select():
+    print("st.session_state.script_run_once",st.session_state.script_run_once)
 
     image_placeholder = st.empty()
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
     image_org = None
+    # print("switch:", st.session_state.switch)
     if uploaded_file is not None:
        image_org = Image.open(uploaded_file)
-       image_placeholder.image(image_org, caption='Brand:',use_column_width=True)
+       if st.session_state.script_run_once is False:
+          image_placeholder.image(image_org, caption='Brand:',use_column_width=True)
 
     #
     # st.write(os.path.exists("model_24Nov1940-Adam.txt"))
@@ -176,7 +197,7 @@ def main():
 
     
     color_mode, flip_or_not, crop_options = add_combos_in_a_row(text_for_combo1="choose color", options1=("RGB", "Grayscale"),
-                                                  text_for_combo2="choose flip", options2=("Org", "Flip","Crop"),
+                                                  text_for_combo2="choose flip", options2=("Org", "Flip"),
                                                   text_for_combo3="choose crop", options3=("Org", "Crop"))
                                                   #text_for_combo3="choose crop", options3=("Org", "Crop10","Crop15","Crop20")
 
@@ -190,9 +211,12 @@ def main():
        image_placeholder.image(image_org, caption='Brand:', use_column_width=True)
 
     if crop_options == "Crop":
-       percentage_x = st.slider("Crop X Ratio", 1, 1, 30)
-       percentage_y = st.slider("Crop Y Ratio", 1, 1, 30)
+       st.session_state.script_run_once = True
+       # percentage_x = st.slider("Crop X Ratio", 1, 1, 30)
+       # percentage_y = st.slider("Crop Y Ratio", 1, 1, 30)
        W, H = image_org.size
+
+       percentage_x,percentage_y = add_sliders_in_a_row(text_for_slide1="CropX", text_for_slide2="CropY")
 
        crop_perc_x = percentage_x/100
        crop_perc_y = percentage_y/100
