@@ -173,8 +173,12 @@ def main():
     # Text
     st.write("This is a simple Streamlit app example.")
 
-    model_params_path = "/home/karaaba/workspace/for_github/torchpy/model_24Nov1940-Adam.txt"
-    model_path = "/home/karaaba/workspace/for_github/torchpy/model_24Nov1940-Adam.pth"
+    # model_params_path = "/home/karaaba/workspace/for_github/torchpy/model_24Nov1940-Adam.txt"
+    # model_path = "/home/karaaba/workspace/for_github/torchpy/model_24Nov1940-Adam.pth"
+
+    model_params_path = "model_24Nov1940-Adam.txt"
+    model_path = "model_24Nov1940-Adam.pth"
+
 
     adp_pool,num_classes,classes,resolution = read_model_properties(model_params_path)
 
