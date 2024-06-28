@@ -11,7 +11,7 @@ opencv-python version is 4.5.2.54
 
 (to install torch and torchvision and some other libraries, see here : https://pytorch.org/get-started/locally/)
 
-to use this program, one needs the dataset split into train/test/validation parts. Use this script similarly as shown above.
+to use this program, one needs the dataset split into train/test/validation parts. Use this script similarly as shown below.
 
 python data_splitter.py class_folder1 class_folder2 ... class_folder_n -out output_folder --train_ratio 0.5 --test_ratio 0.2
 
