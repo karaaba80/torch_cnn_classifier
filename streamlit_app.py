@@ -172,7 +172,7 @@ def main():
                                                            " Confidence:" + str(round(conf, 2)), use_column_width=True)
 
     # Title
-    st.title("Hello, Visitor!")
+    st.title("HI, Visitor!")
     # Header
     st.header("Classifier")
     # Text
