@@ -9,6 +9,24 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 
+def add_combos_in_a_row(text_for_combo1='Select option for Combo Box 1',
+                        text_for_combo2='Select option for Combo Box 2',
+                        options1=('Option 11', 'Option 2', 'Option 3'),
+                        options2=('Option AA', 'Option BB', 'Option CC')):
+    # Create two columns
+    col1, col2 = st.columns(2)
+
+    # Add a combo box to each column
+    with col1:
+        option1 = st.selectbox(text_for_combo1, options1)
+        st.write(f'You selected: {option1}')
+
+    with col2:
+        option2 = st.selectbox(text_for_combo2, options2)
+        st.write(f'You selected: {option2}')
+
+    return option1,option2
+
 def read_model_properties(model_params_path):
     model_params = open(model_params_path).readlines()
     properties = {}
@@ -142,10 +160,13 @@ def main():
     torch.no_grad()
 
     w, h = resolution
-    print("w,h", w, h)
+
+    color_mode, flip_or_not = add_combos_in_a_row(text_for_combo1="choose color", options1=("RGB", "Grayscale"),
+                                                  text_for_combo2="choose flip", options2=("Org", "Flip"))
+
     if image_org is not None:
        predicted_numpy, label, confidence_value = predict_image_object(image_org, model, labels=("acura", "alpha romeo"), res=(w,h), min_prob_threshold=0.75)
-       st.write("label", label)
+       st.write("Brand", label, "Confidence", confidence_value)
 
     st.write("classes"+str(classes))
 
