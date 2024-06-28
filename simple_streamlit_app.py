@@ -156,10 +156,10 @@ def pil_grayscale(image_rgb_obj):
 
 def main():
     # Title
-    st.title("Hello, Streamlit!")
+    # st.title("Hello, Streamlit!")
 
     # Header
-    st.header("Welcome to my Car Classifier App")
+    st.header("Car Classifier App")
 
     # Text
     # st.write("This is a  example.")
@@ -167,7 +167,7 @@ def main():
     if 'script_run_once' not in st.session_state:
         st.session_state.script_run_once = False
 
-    st.write("session state:" + str(st.session_state))
+    # st.write("session state:" + str(st.session_state))
     # def on_option_select():
     print("st.session_state.script_run_once",st.session_state.script_run_once)
 
