@@ -1,7 +1,7 @@
 import os.path
 
 import streamlit as st
-from PIL import Image
+from PIL import Image, ImageOps
 
 import numpy as np
 
@@ -126,6 +126,11 @@ def predict_image_object(img_object, model, labels=("acura", "alpha romeo"), res
     return predicted_numpy, labels[predicted], confidence_value  # this part is used for the single main
 
 
+def pil_grayscale(image_rgb_obj):
+    image_gs = ImageOps.grayscale(image_rgb_obj)
+    rgbimg = Image.merge("RGB", (image_gs, image_gs, image_gs))
+    return rgbimg
+
 def main():
     # Title
     st.title("Hello, Streamlit!")
@@ -163,6 +168,9 @@ def main():
 
     color_mode, flip_or_not = add_combos_in_a_row(text_for_combo1="choose color", options1=("RGB", "Grayscale"),
                                                   text_for_combo2="choose flip", options2=("Org", "Flip"))
+
+    if color_mode.lower() is "Grayscale".lower():
+       image_org = pil_grayscale(image_org)
 
     if image_org is not None:
        predicted_numpy, label, confidence_value = predict_image_object(image_org, model, labels=("acura", "alpha romeo"), res=(w,h), min_prob_threshold=0.75)
