@@ -11,10 +11,12 @@ import torchvision.models as models
 
 def add_combos_in_a_row(text_for_combo1='Select option for Combo Box 1',
                         text_for_combo2='Select option for Combo Box 2',
+                        text_for_combo3='Select option for Combo Box 2',
                         options1=('Option 11', 'Option 2', 'Option 3'),
-                        options2=('Option AA', 'Option BB', 'Option CC')):
+                        options2=('Option AA', 'Option BB', 'Option CC'),
+                        options3=('Option AA', 'Option BB', 'Option CC')):
     # Create two columns
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     # Add a combo box to each column
     with col1:
@@ -25,7 +27,11 @@ def add_combos_in_a_row(text_for_combo1='Select option for Combo Box 1',
         option2 = st.selectbox(text_for_combo2, options2)
         st.write(f'You selected: {option2}')
 
-    return option1,option2
+    with col3:
+        option3 = st.selectbox(text_for_combo3, options3)
+        st.write(f'You selected: {option3}')
+
+    return option1,option2,option3
 
 def read_model_properties(model_params_path):
     model_params = open(model_params_path).readlines()
@@ -136,11 +142,13 @@ def main():
     st.title("Hello, Streamlit!")
 
     # Header
-    st.header("Welcome to my first Streamlit app")
+    st.header("Welcome to my Car Classifier App")
 
     # Text
-    st.write("This is a simple Streamlit app example.")
+    # st.write("This is a  example.")
 
+
+    # print("percentage",percentage)
     if 'switch' not in st.session_state:
         st.session_state.switch = 0
 
@@ -151,9 +159,9 @@ def main():
        image_org = Image.open(uploaded_file)
        image_placeholder.image(image_org, caption='Brand:',use_column_width=True)
 
-
-    st.write(os.path.exists("model_24Nov1940-Adam.txt"))
-    st.write(np.__version__)
+    #
+    # st.write(os.path.exists("model_24Nov1940-Adam.txt"))
+    # st.write(np.__version__)
 
     model_params_path = "model_24Nov1940-Adam.txt"
     model_path = "model_24Nov1940-Adam.pth"
@@ -167,8 +175,11 @@ def main():
     w, h = resolution
 
     
-    color_mode, flip_or_not = add_combos_in_a_row(text_for_combo1="choose color", options1=("RGB", "Grayscale"),
-                                                  text_for_combo2="choose flip", options2=("Org", "Flip"))
+    color_mode, flip_or_not, crop_options = add_combos_in_a_row(text_for_combo1="choose color", options1=("RGB", "Grayscale"),
+                                                  text_for_combo2="choose flip", options2=("Org", "Flip","Crop"),
+                                                  text_for_combo3="choose crop", options3=("Org", "Crop"))
+                                                  #text_for_combo3="choose crop", options3=("Org", "Crop10","Crop15","Crop20")
+
 
     if color_mode == "Grayscale":
        image_org = pil_grayscale(image_org)
@@ -176,6 +187,30 @@ def main():
 
     if flip_or_not == "Flip":
        image_org = image_org.transpose(Image.FLIP_LEFT_RIGHT)
+       image_placeholder.image(image_org, caption='Brand:', use_column_width=True)
+
+    if crop_options == "Crop":
+       percentage_x = st.slider("Crop X Ratio", 1, 1, 30)
+       percentage_y = st.slider("Crop Y Ratio", 1, 1, 30)
+       W, H = image_org.size
+
+       crop_perc_x = percentage_x/100
+       crop_perc_y = percentage_y/100
+        # Step 3: Define the percentage crop
+       # if percentage == :
+       #    crop_perc = 0.1  # 10% crop
+       # elif crop_options.endswith("15"):
+       #    crop_perc = 0.15  # 10% crop
+       # elif crop_options.endswith("20"):
+       #     crop_perc = 0.2  # 10% crop
+       # print("crop percentage", crop_perc)
+       print("crop_perc_x",crop_perc_x,"crop_perc_y",crop_perc_y)
+       left = W * crop_perc_x
+       upper = H * crop_perc_y
+       right = W * (1 - crop_perc_x)
+       lower = H * (1 - crop_perc_y)
+       crop_box = (left, upper, right, lower)
+       image_org = image_org.crop(crop_box)
        image_placeholder.image(image_org, caption='Brand:', use_column_width=True)
 
     # st.write(color_mode)
