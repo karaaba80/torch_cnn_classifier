@@ -1,0 +1,8 @@
+adaptive pool output:3,3
+classes:Acura,Alfa Romeo
+number of classes:2
+resolution:224x224
+epochs:50
+learning_rate:5e-05
+optimizer:Adam
+best acc on validation:0.89
