@@ -64,6 +64,8 @@ def main():
     st.write(os.path.exists("model_24Nov1940-Adam.txt"))
     st.write(numpy.__version__)
 
+    model = CustomNet(num_classes=num_classes, adaptive_pool_output=adp_pool)
+
 
 if __name__ == "__main__":
     main()
