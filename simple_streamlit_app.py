@@ -3,7 +3,7 @@ import os.path
 import streamlit as st
 from PIL import Image
 
-import numpy
+import numpy as np
 
 import torch
 import torch.nn as nn
@@ -64,6 +64,50 @@ class CustomNet(nn.Module):
             exit()
         return x
 
+
+def predict_image_object(img_object, model, labels=("acura", "alpha romeo"), res=(128,128), min_prob_threshold=0.75):
+    # print("filepath", filepath, "\n")
+
+    import torchvision.transforms.functional as TF
+    import torch.nn.functional as F
+
+    import torchvision
+    from PIL import Image
+    from scipy.special import softmax
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    normalizer = torchvision.transforms.Normalize(mean=0.5, std=0.5)
+
+    image = img_object
+    print("image", image.size)
+    model.to(device=device)
+    image = image.resize(res)
+    # image = image.transpose(method=Image.FLIP_LEFT_RIGHT)
+    data = TF.to_tensor(image)
+    data = normalizer(data)
+    data.unsqueeze_(0)
+    data = data.to(device)
+    output = model(data)
+    print("output", output.cpu().detach().numpy()[0])
+    _, predicted = torch.max(output.data, 1)
+    predicted_numpy = predicted.cpu().detach().numpy()
+
+    raw_output = output.cpu().detach().numpy()
+
+    probabilities = np.round(softmax(raw_output), 2)
+    confidence_value = np.max(probabilities)
+
+    final_predicted_value = labels[predicted]
+    if min_prob_threshold > confidence_value:
+        final_predicted_value = "unsure"
+        pass
+    else:
+        # print(os.path.basename(filepath), end=" ")
+        print("prob", probabilities, "confidence:", confidence_value, "pred:", predicted_numpy, final_predicted_value)
+    return predicted_numpy, labels[predicted], confidence_value  # this part is used for the single main
+
+
 def main():
     # Title
     st.title("Hello, Streamlit!")
@@ -79,13 +123,14 @@ def main():
 
     image_placeholder = st.empty()
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    image_org = None
     if uploaded_file is not None:
        image_org = Image.open(uploaded_file)
        image_placeholder.image(image_org, caption='Brand:',use_column_width=True)
 
 
     st.write(os.path.exists("model_24Nov1940-Adam.txt"))
-    st.write(numpy.__version__)
+    st.write(np.__version__)
 
     model_params_path = "model_24Nov1940-Adam.txt"
     model_path = "model_24Nov1940-Adam.pth"
@@ -96,6 +141,11 @@ def main():
     model.eval()  # necessary to disable any drop out units and further
     torch.no_grad()
 
+    w, h = resolution
+    print("w,h", w, h)
+    if image_org is not None:
+       predicted_numpy, label, confidence_value = predict_image_object(image_org, model, labels=("acura", "alpha romeo"), res=(w,h), min_prob_threshold=0.75)
+       st.write("label", label)
 
     st.write("classes"+str(classes))
 
