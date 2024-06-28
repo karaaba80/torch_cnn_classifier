@@ -93,7 +93,10 @@ def main():
     adp_pool, num_classes, classes, resolution = read_model_properties(model_params_path)
     model = CustomNet(num_classes=num_classes, adaptive_pool_output=adp_pool)
     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
-    
+    model.eval()  # necessary to disable any drop out units and further
+    torch.no_grad()
+
+
     st.write("classes"+str(classes))
 
 if __name__ == "__main__":
