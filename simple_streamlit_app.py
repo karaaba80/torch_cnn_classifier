@@ -93,6 +93,7 @@ def main():
     adp_pool, num_classes, classes, resolution = read_model_properties(model_params_path)
     model = CustomNet(num_classes=num_classes, adaptive_pool_output=adp_pool)
 
+    st.write("classes"+str(classes))
 
 if __name__ == "__main__":
     main()
