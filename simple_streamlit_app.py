@@ -176,6 +176,7 @@ def main():
 
     if flip_or_not == "Flip":
        image_org = image_org.transpose(Image.FLIP_LEFT_RIGHT)
+       image_placeholder.image(image_org, caption='Brand:', use_column_width=True)
 
     # st.write(color_mode)
     # st.write(color_mode.lower() is "Grayscale".lower())
