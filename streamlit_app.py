@@ -63,7 +63,14 @@ class CustomNet(nn.Module):
     def __init__(self, num_classes, in_features_size=256, adaptive_pool_output=(1, 1), pretrained=True):  # resnet18
         super(CustomNet, self).__init__()
 
-        self.custom_model = nn.Sequential(*list(models.resnet18(pretrained=pretrained).children())[:-3])
+        # model_resnet18 = models.resnet18(pretrained=True)
+        # torch.save(model_resnet18.state_dict(), 'resnet18_weights.pth')
+
+        self.custom_model = nn.Sequential(*list(models.resnet18(pretrained=False).children())[:-3])
+
+        # if pretrained:
+        #     state_dict = torch.load('resnet18_weights.pth')
+        #     self.custom_model.load_state_dict(state_dict)
 
         self.adaptiveAvgPool2d = nn.AdaptiveAvgPool2d(output_size=adaptive_pool_output)
 
@@ -185,6 +192,7 @@ def main():
     print("classes", list(classes))
 
     model = CustomNet(num_classes=num_classes, adaptive_pool_output=adp_pool)
+
     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval() #necessary to disable any drop out units and further
     torch.no_grad()
