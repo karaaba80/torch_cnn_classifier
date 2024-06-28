@@ -21,15 +21,15 @@ def add_combos_in_a_row(text_for_combo1='Select option for Combo Box 1',
     # Add a combo box to each column
     with col1:
         option1 = st.selectbox(text_for_combo1, options1)
-        st.write(f'You selected: {option1}')
+        # st.write(f'You selected: {option1}')
 
     with col2:
         option2 = st.selectbox(text_for_combo2, options2)
-        st.write(f'You selected: {option2}')
+        # st.write(f'You selected: {option2}')
 
     with col3:
         option3 = st.selectbox(text_for_combo3, options3)
-        st.write(f'You selected: {option3}')
+        # st.write(f'You selected: {option3}')
 
     return option1,option2,option3
 
@@ -236,7 +236,8 @@ def main():
        crop_box = (left, upper, right, lower)
        image_org = image_org.crop(crop_box)
        image_placeholder.image(image_org, caption='Brand:', use_column_width=True)
-
+    else:
+        st.session_state.script_run_once = False
     # st.write(color_mode)
     # st.write(color_mode.lower() is "Grayscale".lower())
 
