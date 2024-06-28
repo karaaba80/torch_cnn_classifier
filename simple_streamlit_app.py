@@ -3,6 +3,8 @@ import os.path
 import streamlit as st
 from PIL import Image
 
+import numpy
+
 import torch
 import torch.nn as nn
 import torchvision.models as models
@@ -60,6 +62,7 @@ def main():
 
 
     st.write(os.path.exists("model_24Nov1940-Adam.txt"))
+    st.write(numpy.__version__)
 
 
 if __name__ == "__main__":
