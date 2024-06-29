@@ -161,8 +161,6 @@ def main():
     # Header
     st.header("Car Classifier App")
 
-    # Text
-    # st.write("This is a  example.")
 
     if 'script_run_once' not in st.session_state:
         st.session_state.script_run_once = False
@@ -172,13 +170,24 @@ def main():
     print("st.session_state.script_run_once",st.session_state.script_run_once)
 
     image_placeholder = st.empty()
-    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
     image_org = None
+
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+
+    caption_var = "Brand:"
+    image_url = st.text_input("Or enter an image URL")
+    if not image_url == "":
+       import requests
+       from io import BytesIO
+       response = requests.get(image_url)
+       image_org = Image.open(BytesIO(response.content))
+       image_placeholder.image(image_org, caption=caption_var, use_column_width=True)
+
     # print("switch:", st.session_state.switch)
     if uploaded_file is not None:
        image_org = Image.open(uploaded_file)
        if st.session_state.script_run_once is False:
-          image_placeholder.image(image_org, caption='Brand:',use_column_width=True)
+          image_placeholder.image(image_org, caption=caption_var,use_column_width=True)
 
     #
     # st.write(os.path.exists("model_24Nov1940-Adam.txt"))
@@ -220,14 +229,7 @@ def main():
 
        crop_perc_x = percentage_x/100
        crop_perc_y = percentage_y/100
-        # Step 3: Define the percentage crop
-       # if percentage == :
-       #    crop_perc = 0.1  # 10% crop
-       # elif crop_options.endswith("15"):
-       #    crop_perc = 0.15  # 10% crop
-       # elif crop_options.endswith("20"):
-       #     crop_perc = 0.2  # 10% crop
-       # print("crop percentage", crop_perc)
+
        print("crop_perc_x",crop_perc_x,"crop_perc_y",crop_perc_y)
        left = W * crop_perc_x
        upper = H * crop_perc_y
@@ -235,7 +237,7 @@ def main():
        lower = H * (1 - crop_perc_y)
        crop_box = (left, upper, right, lower)
        image_org = image_org.crop(crop_box)
-       image_placeholder.image(image_org, caption='Brand:', use_column_width=True)
+       image_placeholder.image(image_org, caption=caption_var, use_column_width=True)
     else:
         st.session_state.script_run_once = False
     # st.write(color_mode)
@@ -244,6 +246,10 @@ def main():
     if image_org is not None:
        predicted_numpy, label, confidence_value = predict_image_object(image_org, model, labels=("acura", "alpha romeo"), res=(w,h), min_prob_threshold=0.75)
        st.write("Brand", label, "Confidence", confidence_value)
+       caption_var = 'Brand:' + label + " Probability:" + str(round(confidence_value, 2))
+       st.markdown(f"<p style='font-size: 30px;'>{caption_var}</p>", unsafe_allow_html=True)
+       image_placeholder.image(image_org, caption=caption_var, use_column_width=True) #caption=caption_var,
+
 
     st.write("classes"+str(classes))
 
