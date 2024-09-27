@@ -30,7 +30,6 @@ class trainer:
         # self.model = MyNN(num_classes)
         self.model = model
 
-        # self.optimizer = optim.Adam(self.model.parameters(), lr=lrate)
         # self.optimizer = optim.SparseAdam(self.model.parameters(), lr=lrate)
 
         self.device = device
